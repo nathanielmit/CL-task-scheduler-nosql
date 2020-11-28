@@ -2,8 +2,8 @@ from reminder import *
 import prettytable
 
 def printAllUsers(db):
-    db.execute("SELECT * FROM User")
-    rows = db.fetchall()
+    users = db["user"]
+    rows = users.find()
     table = ""
     if len(rows) > 0:
         table = prettytable.PrettyTable(["username", "name", "password"])
@@ -14,21 +14,21 @@ def printAllUsers(db):
     return
 
 def getUserName(db, username):
-    db.execute("SELECT name FROM User WHERE username=?", (username,))
-    return db.fetchone()[0]
+    users = db["user"]
+    return users.find_one({"username":username},{ "_id": 0, "name": 1, "password": 0 })
 
 def loginUser(db, user):
-    db.execute("SELECT * FROM User WHERE username=? AND password=?", user)
-    rows = db.fetchall()
+    users = db["user"]
+    rows = users.find_one({"username":user[0], "password":user[1]})
+    print("rows\n", rows)
     if len(rows) > 0:
         return True
     else:
         return False
 
 def registerUser(db, user):
-    sql = ''' INSERT INTO User(username,name,password) VALUES(?,?,?) '''
-    db.execute(sql, user)
-    return
+    users = db["user"]
+    return users.insert_one({"username":user[0], "name":user[1], "password":user[2]})
 
 def login(db):
     authenticated = False
@@ -50,17 +50,14 @@ def login(db):
         print("Login failed!")
     return authenticated, username
 
-def register(db, conn):
+def register(db):
     authenticated = False
     username = input("Enter username: ")
     name = input("Enter name: ")
     password = input("Enter password: ")
     new_user = (username, name, password)
-    registerUser(db, new_user)
-    conn.commit()
-    if db.lastrowid < 1:
-        print("Registration failed!")
-    else:
-        authenticated = True
-        print("You've successfully registered!")
+    ret = registerUser(db, new_user)
+    print("return value of register insert: ", ret.inserted_id)
+    authenticated = True
+    print("You've successfully registered!")
     return authenticated, username

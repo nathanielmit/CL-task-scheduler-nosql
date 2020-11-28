@@ -2,7 +2,7 @@
 import datetime
 import sys, os
 import time
-import sqlite3
+import pymongo
 import uuid
 import prettytable
 
@@ -26,36 +26,10 @@ def createExampleData(db, conn):
     conn.commit()
     return
 
-def createTables(db):
-    db.execute('''CREATE TABLE IF NOT EXISTS User (
-        username text PRIMARY KEY,
-        name text NOT NULL,
-        password text NOT NULL
-        );''')
-
-    db.execute('''CREATE TABLE IF NOT EXISTS Task (
-        taskID text PRIMARY KEY,
-        username text,
-        title text,
-        datetime date,
-        description text,
-        CONSTRAINT unq UNIQUE (username, title)
-        ); ''')
-
-    db.execute('''CREATE TABLE IF NOT EXISTS Reminder (
-        reminderID integer PRIMARY KEY AUTOINCREMENT,
-        username,
-        name text, 
-        datetime date
-    );''')
-     
-    return
-
 
 def main():
-    conn = sqlite3.connect('taskScheduler.db')
-    db = conn.cursor()
-    createTables(db)
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    db = client["mydatabase"]
     authenticated = False
     username = None
     exData = input("Create example data?")
@@ -68,7 +42,7 @@ def main():
         if userInput == "login":
             authenticated, username = login(db)
         if userInput == "register":
-            authenticated, username = register(db, conn)
+            authenticated, username = register(db)
 
     userInput = input("What would you like to do?\n")
     while userInput != "quit":
