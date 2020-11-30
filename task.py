@@ -1,11 +1,12 @@
 import prettytable
 
 def getAllTask(db, username):
-    db.execute("SELECT * FROM Task WHERE username=?", (username,))
-    return(db.fetchall())
+    tasks = db["task"]
+    return tasks.find({"username":username})
 
 def printTasks(db, username):
-    rows = getAllTask(db, username)
+    tasks = db["task"]
+    rows = tasks.find({"username":username})
     table = ""
     if len(rows) > 0:
         table = prettytable.PrettyTable(["taskID", "username", "title", "datetime","description"])
@@ -16,8 +17,8 @@ def printTasks(db, username):
     return
 
 def printAllTasks(db):
-    db.execute("SELECT * FROM Task")
-    rows = db.fetchall()
+    tasks = db["task"]
+    rows = task.find()
     table = ""
     if len(rows) > 0:
         table = prettytable.PrettyTable(["taskID", "username", "title", "datetime","description"])
@@ -28,16 +29,11 @@ def printAllTasks(db):
     return
 
 def deleteTask(db, taskToDelete):
-    sql = ''' DELETE FROM Task WHERE username=? AND title=? '''
-    result = db.execute(sql, taskToDelete)
-    if result.rowcount > 0:
-        return True
-    else:
-        return False
-
+    tasks = db["task"]
+    task.delete_one({"username":taskToDelete[0], "title":taskToDelete[1]})
+    return True
 
 def createTask(db, task):
-    sql = ''' INSERT INTO Task(taskID, username, title, datetime, description)
-              VALUES(?,?,?,?,?) '''
-    db.execute(sql, task)
+    tasks = db["task"]
+    tasks.insert_one({"taskID":task[0], "username":task[1], "title":task[2], "datetime":task[3], "datetime":task[4], "description":task[5]})
     return
