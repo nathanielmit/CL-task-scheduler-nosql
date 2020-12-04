@@ -22,10 +22,10 @@ def printAllTasks(db):
     tasks = db["task"]
     rows = tasks.find()
     table = ""
-    if len(rows) > 0:
-        table = prettytable.PrettyTable(["taskID", "username", "title", "datetime","description"])
+    if rows.count() > 0:
+        table = prettytable.PrettyTable(["_id", "taskID", "username", "title", "datetime", "description"])
         for row in rows:
-            table.add_row(row)
+            table.add_row([row['_id'], row['taskID'], row['username'], row['title'], row['datetime'], row['description']])
 
     print(table)
     return
