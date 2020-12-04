@@ -60,7 +60,7 @@ def main():
 
             task = (task_id, username, title, date, description)
             createTask(db, task)
-            conn.commit()
+            #conn.commit()
             print("Successfully created task")
 
         # Delete a task
@@ -73,7 +73,7 @@ def main():
             print("Going to delete: ", username, taskName)
             taskToDelete = (username, taskName)
             deleted = deleteTask(db, taskToDelete)
-            conn.commit()
+            #conn.commit()
             if deleted:
                 print("Successfully deleted!")
             else:
@@ -99,7 +99,7 @@ def main():
 
             reminder = (username, name, date)
             createReminder(db, reminder)
-            conn.commit()
+            #conn.commit()
             print("Successfully created reminder")
 
         # Delete a task
@@ -111,7 +111,7 @@ def main():
             reminderName = input("Enter name of reminder to delete: ")
             reminderToDelete = (username, reminderName)
             deleted = deleteReminder(db, reminderToDelete)
-            conn.commit()
+            #conn.commit()
             if deleted:
                 print("Successfully deleted!")
             else:
