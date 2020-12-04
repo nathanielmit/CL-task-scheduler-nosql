@@ -35,7 +35,7 @@ def getTodaysReminders(db, username):
     #rows = db.fetchall()
     if rows.count() > 0:
         print("Your reminders for today:")
-    for row in reminders.find({"username":username}):
+    for row in rows:
         print(row[2],"at",row[3])
     return
 
