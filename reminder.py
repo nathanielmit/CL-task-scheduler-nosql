@@ -41,7 +41,7 @@ def getTodaysReminders(db, username):
 
 def createReminder(db, reminder):
     reminders = db["reminder"]
-    reminders.insert_one({"reminderID":reminder[0], "name":reminder[1], "datetime",reminder[2]})
+    reminders.insert_one({"reminderID":reminder[0], "name":reminder[1], "datetime":reminder[2]})
     return
 
 def deleteReminder(db, reminderToDelete):

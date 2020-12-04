@@ -4,6 +4,9 @@ import prettytable
 def printAllUsers(db):
     users = db["user"]
     rows = users.find()
+    print("values in return value of users.find()")
+    for i in rows:
+        print(i)
     table = ""
     if len(rows) > 0:
         table = prettytable.PrettyTable(["username", "name", "password"])
@@ -15,7 +18,7 @@ def printAllUsers(db):
 
 def getUserName(db, username):
     users = db["user"]
-    return users.find_one({"username":username},{ "_id": 0, "name": 1, "password": 0 })
+    return users.find_one({"username":username})['name']
 
 def loginUser(db, user):
     users = db["user"]
