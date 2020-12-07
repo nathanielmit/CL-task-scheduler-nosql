@@ -3,15 +3,12 @@ import prettytable
 
 def printAllUsers(db):
     users = db["user"]
-    rows = users.find()
-    print("values in return value of users.find()")
-    for i in rows:
-        print(i)
+    rows = users.find({},{"_id": 0})
     table = ""
-    if len(rows) > 0:
+    if rows.count() > 0:
         table = prettytable.PrettyTable(["username", "name", "password"])
         for row in rows:
-            table.add_row(row)
+            table.add_row([row['username'], row['name'], row['password']])
 
     print(table)
     return
@@ -22,9 +19,8 @@ def getUserName(db, username):
 
 def loginUser(db, user):
     users = db["user"]
-    rows = users.find_one({"username":user[0], "password":user[1]})
-    print("rows\n", rows)
-    if len(rows) > 0:
+    row = users.find_one({"username":user[0], "password":user[1]})
+    if row:
         return True
     else:
         return False

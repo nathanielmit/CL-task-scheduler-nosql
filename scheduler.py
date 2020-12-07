@@ -10,7 +10,7 @@ from reminder import *
 from task import *
 from user import *
 
-def createExampleData(db, conn):
+def createExampleData(db):
     # Create 10 users
     for i in range(10):
         registerUser(db, ("username"+str(i), "name"+str(i), "password"+str(i)))
@@ -23,7 +23,6 @@ def createExampleData(db, conn):
     for i in range(10):
         createReminder(db, ("username"+str(i), "Reminder number "+str(i), "10/30/2020 12:30"))
 
-    conn.commit()
     return
 
 
@@ -34,7 +33,7 @@ def main():
     username = None
     exData = input("Create example data?")
     if exData == 'y':
-        createExampleData(db, conn)
+        createExampleData(db)
 
     while not authenticated:
         print("Would you like to login or register?")
@@ -60,7 +59,6 @@ def main():
 
             task = (task_id, username, title, date, description)
             createTask(db, task)
-            #conn.commit()
             print("Successfully created task")
 
         # Delete a task
@@ -72,12 +70,8 @@ def main():
             taskName = input("Enter name of task to delete: ")
             print("Going to delete: ", username, taskName)
             taskToDelete = (username, taskName)
-            deleted = deleteTask(db, taskToDelete)
-            #conn.commit()
-            if deleted:
-                print("Successfully deleted!")
-            else:
-                print("Failed to delete!")
+            deleteTask(db, taskToDelete)
+            print("Successfully deleted!")
 
         # Print all user reminders
         if userInput == "list reminders":
@@ -99,7 +93,6 @@ def main():
 
             reminder = (username, name, date)
             createReminder(db, reminder)
-            #conn.commit()
             print("Successfully created reminder")
 
         # Delete a task
@@ -111,16 +104,14 @@ def main():
             reminderName = input("Enter name of reminder to delete: ")
             reminderToDelete = (username, reminderName)
             deleted = deleteReminder(db, reminderToDelete)
-            #conn.commit()
             if deleted:
                 print("Successfully deleted!")
             else:
                 print("Failed to delete!")
         if userInput == "help":
-            print("commands:\nlist tasks, create task, delete task, list all tasks, list all reminders, list all users:")
+            print("commands:\nlist tasks, create task, delete task, list all tasks, create reminder, delete reminder, list reminders, list all reminders, list all users:")
 
         userInput = input("What would you like to do?\n")
-    db.close()
     return
 
 
